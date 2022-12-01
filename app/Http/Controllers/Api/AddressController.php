@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\AddressResource;
+use App\Http\Resources\MyAddressResource;
 use App\Models\Address;
 use App\Models\Code;
+use App\Models\Country;
+use App\Models\City;
+use App\Models\User;
 use App\Repositories\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Auth;
 
 class AddressController extends ApiController
 {
@@ -24,12 +29,19 @@ class AddressController extends ApiController
     {
 
 
-        $country_code = substr($request->country,0, 2);
-        $city_code =substr($request->city,0, 2);
+        // $country_code = substr($request->country,0, 2);
+        // $city_code =substr($request->city,0, 2);
+
+        $country_id = $request->country_id;
+        $city_id =$request->city_id;
+
+        $country_code=Country::where('id',$country_id)->pluck('code')->first();
+        $city_code=City::where('id',$city_id)->pluck('code')->first();
 
         // echo $city_code;
         // return;
         $country_city = strtoupper( $country_code . $city_code );
+
         $random_number = random_int(1000, 9999);
         $rn = (string) $random_number;
 
@@ -56,7 +68,8 @@ class AddressController extends ApiController
             $code->save();
 
             $request['code_id'] = $code->id;
-
+            $user= Auth::user();
+            $request['user_id'] = $user->id;
             $address = $this->repositry->save($request->all());
 
             return $this->returnData('data', new $this->resource($address), __('Get  succesfully'));

@@ -26,11 +26,26 @@ use App\Http\Controllers\Api\CityController;
 |
 */
 
-Route::middleware('auth:api')->group(function () {
+
+//Auth
+Route::middleware(['auth:api','changeLang'])->group(function () {
+
     Route::post('/user-update', [AuthController::class, 'updateProfile']);
+
+    Route::post('address-create', [AddressController::class, 'save']);
+
+    Route::get('my-addresses', [AddressController::class, 'myAddresses']);
+
 });
 
-
+Route::middleware('changeLang')->group(function () {
+    //Category
+Route::get('categories', [CategoryController::class, 'list']);
+Route::post('category-create', [CategoryController::class, 'save']);
+Route::get('category/{id}', [CategoryController::class, 'view']);
+Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
+Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
+});
 
 
 
@@ -70,7 +85,7 @@ Route::post('order/edit/{id}', [OrderController::class, 'edit']);
 
 //Address
 Route::get('addresses', [AddressController::class, 'list']);
-Route::post('address-create', [AddressController::class, 'save']);
+
 Route::get('address/{code}', [AddressController::class, 'view']);
 Route::get('address/delete/{id}', [AddressController::class, 'delete']);
 Route::post('address/edit/{id}', [AddressController::class, 'edit']);
