@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->text('cover_picture');
             $table->text('logo');
-            $table->text('name');
-            $table->text('address');
+            $table->json('name');
+            $table->json('address');
             $table->text('phone');
-            $table->text('description');
-            $table->text('short_desc');
+            $table->json('description');
+            $table->json('short_desc');
             $table->integer('category_id');
             $table->timestamps();
         });

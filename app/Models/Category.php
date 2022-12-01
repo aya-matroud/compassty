@@ -10,7 +10,7 @@ class Category extends Model
 {
     use HasFactory, HasTranslations;
     protected $guarded=[];
-    public $translatable = ['name']; // كل الكولمز الي بدنا نترجمها بهاي الحاله بس الاسم
+    public $translatable = ['name'];
 
     public function setImageAttribute($value){
         if ($value){

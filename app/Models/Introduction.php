@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Spatie\Translatable\HasTranslations;
 
 class Introduction extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTranslations;
     protected $guarded=[];
+    public $translatable = ['title','body'];
 
     public function setImageAttribute($value){
         if ($value){
