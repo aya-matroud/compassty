@@ -12,6 +12,7 @@ use App\Models\City;
 use App\Models\User;
 use App\Repositories\Repository;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddressRequest;
 use Illuminate\Support\Str;
 use Auth;
 
@@ -25,7 +26,7 @@ class AddressController extends ApiController
         $this->repositry = new Repository($this->model);
     }
 
-    public function save(Request $request)
+    public function save(AddressRequest $request)
     {
 
 
@@ -78,7 +79,7 @@ class AddressController extends ApiController
         }
     }
 
-    public function edit($id, Request $request)
+    public function edit($id, AddressRequest $request)
     {
 
         return $this->update($id, $request->all());
