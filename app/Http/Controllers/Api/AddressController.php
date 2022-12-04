@@ -89,8 +89,15 @@ class AddressController extends ApiController
     {
 
         $data = Code::where('code', $code)->first();
-        if (!$data->address) {
+
+
+        if (empty($data->id)) {
+
             return $this->returnError('Address not found !!!');
+        }
+
+        if( Auth::user() ){
+            Auth::user()->recent()->save($data->address);
         }
 
         // echo $data->name; // getNameAttribute()
@@ -104,6 +111,15 @@ class AddressController extends ApiController
         $user = Auth::user();
 
         return $this->returnData('data', MyAddressResource::collection($user->addresses), __('Get  succesfully'));
+    }
+
+
+    public function recentAddresses(Request $request)
+    {
+
+        $user = Auth::user();
+
+        return $this->returnData('data', MyAddressResource::collection($user->recent), __('Get  succesfully'));
     }
 
     public function checkUniqueNumber($rn)

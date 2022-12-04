@@ -35,6 +35,9 @@ Route::middleware(['auth:api','changeLang'])->group(function () {
     Route::post('address-create', [AddressController::class, 'save']);
 
     Route::get('my-addresses', [AddressController::class, 'myAddresses']);
+    Route::get('recent-used', [AddressController::class, 'recentAddresses']);
+
+    Route::get('address/{code}', [AddressController::class, 'view']);
 
 });
 
@@ -131,7 +134,7 @@ Route::post('order/edit/{id}', [OrderController::class, 'edit']);
 //Address
 Route::get('addresses', [AddressController::class, 'list']);
 
-Route::get('address/{code}', [AddressController::class, 'view']);
+
 Route::get('address/delete/{id}', [AddressController::class, 'delete']);
 Route::post('address/edit/{id}', [AddressController::class, 'edit']);
 

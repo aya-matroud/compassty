@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function addresses(){
         return $this->hasMany(Address::class);
     }
+
+    public function recent(){
+        return $this->morphToMany(Address::class,'addressable');
+    }
 }
