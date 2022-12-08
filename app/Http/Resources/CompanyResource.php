@@ -24,7 +24,8 @@ class CompanyResource extends JsonResource
             'phone'=>$this->phone,
             'description'=>$this->description,
             'short_desc'=>$this->short_desc,
-            'category'=> new SimpleCategoryResource($this?->category),
+            'category_id'=>$this?->category->id,
+            // 'category'=> new SimpleCategoryResource($this?->category),
             'images'=> ImageResource::collection($this?->images),
         ];
     }

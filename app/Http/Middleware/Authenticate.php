@@ -12,10 +12,10 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    protected function redirectTo($request)
+    public function handle(Request $request, Closure $next)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
-        }
+        $lang = ($request->hasHeader('X-localization')) ? $request->header('X-localization') : 'en';
+        app()->setlocale($lang);
+        return $next($request);
     }
 }

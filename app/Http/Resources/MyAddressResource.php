@@ -17,7 +17,7 @@ class MyAddressResource extends JsonResource
         return [
             'name'=>$this->name,
             'code'=>$this->code->code,
-            'icon'=>$this->icon,
+            'icon'=>$this->icon->icon,
 
 
 
