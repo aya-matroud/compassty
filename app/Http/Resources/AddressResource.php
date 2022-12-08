@@ -23,8 +23,8 @@ class AddressResource extends JsonResource
             'name'=>$this->name,
             'lat'=>$this->lat,
             'long'=>$this->long,
-            'country'=>$this->country_id,
-            'city'=>$this->city_id,
+            'country'=>$this->country->name,
+            'city'=>$this->city->name,
             'street'=>$this->street,
             'build_number'=>$this->build_number,
             'house_number'=>$this->house_number,
@@ -32,7 +32,7 @@ class AddressResource extends JsonResource
             'note'=>$this->note,
             'region'=>$this->region,
             'phone_number'=>$this->phone_number,
-            'user'=> new UserResource($this?->user),//here we need all data for user so we keep object
+            'user'=> new UserResource($this?->user),
             // 'code'=> new CodeResource($this?->code),
 
         ];

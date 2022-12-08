@@ -113,9 +113,9 @@ class AddressController extends ApiController
             return $this->returnError('Address not found !!!');
         }
 
-        // if (Auth::user()) {
-        //     Auth::user()->recent()->save($data->address);
-        // }
+        if (Auth::user()) {
+            Auth::user()->recent()->save($data->address);
+        }
 
         // echo $data->name; // getNameAttribute()
         // return;

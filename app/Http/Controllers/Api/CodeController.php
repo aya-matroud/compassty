@@ -51,7 +51,7 @@ class CodeController extends ApiController
             $address->code_id = $data->id;
             $address->save();
 
-            // $data->load('address');
+            $data->load('address');
             return $this->returnData('data', new $this->resource($data), __('Updated succesfully'));
         }
 

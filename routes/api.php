@@ -37,13 +37,11 @@ Route::middleware(['auth:api', 'changeLang'])->group(function () {
     Route::get('my-addresses', [AddressController::class, 'myAddresses']);
     Route::get('recent-used', [AddressController::class, 'recentAddresses']);
 
-    // Route::get('address/{code}', [AddressController::class, 'view']);
+    Route::get('address/{code}', [AddressController::class, 'view']);
 });
 
-Route::middleware(['auth:api', 'guest', 'changeLang'])->group(function () {
 
-    Route::get('address2/{code}', [AddressController::class, 'view'])->name('login');
-});
+Route::get('address2/{code}', [AddressController::class, 'view'])->name('login');
 
 
 Route::middleware('changeLang')->group(function () {
