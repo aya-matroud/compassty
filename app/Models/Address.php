@@ -25,4 +25,8 @@ class Address extends Model
     public function city(){
         return $this->belongsTo(City::class);
     }
+
+    public function icon(){
+        return $this->belongsTo(Icon::class);
+    }
 }

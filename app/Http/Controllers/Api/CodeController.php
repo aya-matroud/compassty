@@ -9,6 +9,9 @@ use App\Http\Requests\CodeRequest;
 use App\Http\Resources\CodeResource;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use App\Models\Address;
+use App\Models\City;
+use App\Models\Country;
 use Illuminate\Support\Str;
 
 class CodeController extends ApiController
@@ -21,24 +24,37 @@ class CodeController extends ApiController
     }
 
 
-     public function sellCode(Request $request){
+    public function sellCode(Request $request)
+    {
 
 
-        $data=Code::where('code',$request->code)->first();
+        $data = Code::where('code', $request->code)->first();
+
+        $country_code = Country::where('id', $request->country_id)->pluck('code')->first();
+        $city_code = City::where('id', $request->city_id)->pluck('code')->first();
+
+        $country_city = strtoupper($country_code . $city_code);
 
         if ($data) {
 
+            $newCode = str_replace ('UNIQUE',$country_city, $data->code);
+
+
+
             $data->update([
-                'user_id'=> $request->user_id
+                'code'=>$newCode,
+                'type'=>'premium',
+                'user_id' => $request->user_id
             ]);
-            return $this->returnData('data', new $this->resource( $data ), __('Updated succesfully'));
+
+            $address = Address::find($request->address_id);
+            $address->code_id = $data->id;
+            $address->save();
+
+            $data->load('address');
+            return $this->returnData('data', new $this->resource($data), __('Updated succesfully'));
         }
 
         return $this->returnError(__('Sorry! Failed to get !'));
-
-
-     }
-
-
-
+    }
 }

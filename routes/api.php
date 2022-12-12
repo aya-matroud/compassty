@@ -28,7 +28,7 @@ use App\Http\Controllers\Api\CityController;
 
 
 //Auth
-Route::middleware(['auth:api','changeLang'])->group(function () {
+Route::middleware(['auth:api', 'changeLang'])->group(function () {
 
     Route::post('/user-update', [AuthController::class, 'updateProfile']);
 
@@ -38,67 +38,69 @@ Route::middleware(['auth:api','changeLang'])->group(function () {
     Route::get('recent-used', [AddressController::class, 'recentAddresses']);
 
     Route::get('address/{code}', [AddressController::class, 'view']);
-
 });
+
+
+Route::get('address2/{code}', [AddressController::class, 'view'])->name('login');
+
 
 Route::middleware('changeLang')->group(function () {
 
 
     //Category
-Route::get('categories', [CategoryController::class, 'list']);
-Route::post('category-create', [CategoryController::class, 'save']);
-Route::get('category/{id}', [CategoryController::class, 'view']);
-Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
-Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
+    Route::get('categories', [CategoryController::class, 'list']);
+    Route::post('category-create', [CategoryController::class, 'save']);
+    Route::get('category/{id}', [CategoryController::class, 'view']);
+    Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
+    Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
 
 
 
 
-//Introduction
-Route::get('introductions', [IntroductionController::class, 'list']);
-Route::post('introduction-create', [IntroductionController::class, 'save']);
-Route::get('introduction/{id}', [IntroductionController::class, 'view']);
-Route::get('introduction/delete/{id}', [IntroductionController::class, 'delete']);
-Route::post('introduction/edit/{id}', [IntroductionController::class, 'edit']);
-Route::get('test', [IntroductionController::class, 'test']);
+    //Introduction
+    Route::get('introductions', [IntroductionController::class, 'list']);
+    Route::post('introduction-create', [IntroductionController::class, 'save']);
+    Route::get('introduction/{id}', [IntroductionController::class, 'view']);
+    Route::get('introduction/delete/{id}', [IntroductionController::class, 'delete']);
+    Route::post('introduction/edit/{id}', [IntroductionController::class, 'edit']);
+    Route::get('test', [IntroductionController::class, 'test']);
 
 
-//Company
-Route::get('companies', [CompanyController::class, 'list']);
-Route::post('company-create', [CompanyController::class, 'save']);
-Route::get('company/{id}', [CompanyController::class, 'view']);
-Route::get('company/delete/{id}', [CompanyController::class, 'delete']);
-Route::post('company/edit/{id}', [CompanyController::class, 'edit']);
+    //Company
+    Route::get('companies', [CompanyController::class, 'list']);
+    Route::post('company-create', [CompanyController::class, 'save']);
+    Route::get('company/{id}', [CompanyController::class, 'view']);
+    Route::get('company/delete/{id}', [CompanyController::class, 'delete']);
+    Route::post('company/edit/{id}', [CompanyController::class, 'edit']);
 
-Route::post('companies/search', [CompanyController::class, 'lookfor']);
-
-
-//Notification
-Route::get('notifications', [NotificationController::class, 'list']);
-Route::post('notification-create', [NotificationController::class, 'save']);
-Route::get('notification/{id}', [NotificationController::class, 'view']);
-Route::get('notification/delete/{id}', [NotificationController::class, 'delete']);
-Route::post('notification/edit/{id}', [NotificationController::class, 'edit']);
+    Route::post('companies/search', [CompanyController::class, 'lookfor']);
 
 
+    //Notification
+    Route::get('notifications', [NotificationController::class, 'list']);
+    Route::post('notification-create', [NotificationController::class, 'save']);
+    Route::get('notification/{id}', [NotificationController::class, 'view']);
+    Route::get('notification/delete/{id}', [NotificationController::class, 'delete']);
+    Route::post('notification/edit/{id}', [NotificationController::class, 'edit']);
 
-//Country
-Route::get('countries', [CountryController::class, 'list']);
-Route::post('country-create', [CountryController::class, 'save']);
-Route::get('country/{id}', [CountryController::class, 'view']);
-Route::get('country/delete/{id}', [CountryController::class, 'delete']);
-Route::post('country/edit/{id}', [CountryController::class, 'edit']);
 
 
-//City
-Route::get('cities', [CityController::class, 'list']);
-Route::post('city-create', [CityController::class, 'save']);
-Route::get('city/{id}', [CityController::class, 'view']);
-Route::get('city/delete/{id}', [CityController::class, 'delete']);
-Route::post('city/edit/{id}', [CityController::class, 'edit']);
+    //Country
+    Route::get('countries', [CountryController::class, 'list']);
+    Route::post('country-create', [CountryController::class, 'save']);
+    Route::get('country/{id}', [CountryController::class, 'view']);
+    Route::get('country/delete/{id}', [CountryController::class, 'delete']);
+    Route::post('country/edit/{id}', [CountryController::class, 'edit']);
 
-Route::get('cities/{country_id}', [CityController::class, 'getCitiesByCountry']);
 
+    //City
+    Route::get('cities', [CityController::class, 'list']);
+    Route::post('city-create', [CityController::class, 'save']);
+    Route::get('city/{id}', [CityController::class, 'view']);
+    Route::get('city/delete/{id}', [CityController::class, 'delete']);
+    Route::post('city/edit/{id}', [CityController::class, 'edit']);
+
+    Route::get('cities/{country_id}', [CityController::class, 'getCitiesByCountry']);
 });
 
 
@@ -170,8 +172,3 @@ Route::post('category-create', [CategoryController::class, 'save']);
 Route::get('category/{id}', [CategoryController::class, 'view']);
 Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
 Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
-
-
-
-
-

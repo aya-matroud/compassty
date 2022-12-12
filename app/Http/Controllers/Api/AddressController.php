@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AddressRequest;
 use Illuminate\Support\Str;
 use Auth;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AddressController extends ApiController
 {
@@ -30,52 +32,67 @@ class AddressController extends ApiController
     {
 
 
-        // $country_code = substr($request->country,0, 2);
-        // $city_code =substr($request->city,0, 2);
+        try {
 
-        $country_id = $request->country_id;
-        $city_id =$request->city_id;
+            DB::beginTransaction();
+            $country_id = $request->country_id;
+            $city_id = $request->city_id;
 
-        $country_code=Country::where('id',$country_id)->pluck('code')->first();
-        $city_code=City::where('id',$city_id)->pluck('code')->first();
-
-        // echo $city_code;
-        // return;
-        $country_city = strtoupper( $country_code . $city_code );
-
-        $random_number = random_int(1000, 9999);
-        $rn = (string) $random_number;
-
-        if ($this->checkUniqueNumber($rn)) {
-
-            // print_r($rn . '</br>');
-            // echo 'true';
-
-            $code = new Code();
-            $code->code = 'UNIQUE' . $rn;
-            //$code->name = 'Unique - ' . $rn;
-            $code->save();
-
-            return $this->save($request);
-
-        }else {
+            $country_code = Country::where('id', $country_id)->pluck('code')->first();
+            $city_code = City::where('id', $city_id)->pluck('code')->first();
 
 
-            $code_rn = str($country_city)->append($rn);
-            $code = new Code();
-            $code->id = $request->id;
-            $code->code = $code_rn;
-            //$code->name = $request->name;
-            $code->save();
+            $country_city = strtoupper($country_code . $city_code);
 
-            $request['code_id'] = $code->id;
-            $user= Auth::user();
-            $request['user_id'] = $user->id;
-            $address = $this->repositry->save($request->all());
+            $random_number = random_int(1000, 9999);
+            $rn = (string) $random_number;
 
-            return $this->returnData('data', new $this->resource($address), __('Get  succesfully'));
 
-            // return $this->store($request->all());
+            if ($this->checkUniqueNumber($rn)) {
+
+                $code = Code::Where('code', 'UNIQUE' . $rn)->first();
+                if (empty($code) || !$code) {
+                    $code = new Code();
+                    $code->code = 'UNIQUE' . $rn;
+                    $code->type = 'personal';
+                    $code->save();
+                }
+
+
+
+                return $this->save($request);
+            } else {
+
+
+                $code_rn = str($country_city)->append($rn);
+                $code = Code::Where('code', $code_rn)->first();
+
+                if (empty($code) || !$code) {
+                    $code = new Code();
+                    $code->id = $request->id;
+                    $code->code = $code_rn;
+                    $code->type = 'personal';
+                    $code->save();
+                } else {
+                    return $this->save($request);
+                }
+
+
+                $request['code_id'] = $code->id;
+                $user = Auth::user();
+                $request['user_id'] = $user->id;
+
+
+                $address = $this->repositry->save($request->all());
+
+                return $this->returnData('data', new $this->resource($address), __('Get  succesfully'));
+            }
+            DB::commit();
+        } catch (Exception $ex) {
+            // dd( $ex );
+            Db::rollBack();
+
+            return $this->returnError('not created !!');
         }
     }
 
@@ -83,7 +100,6 @@ class AddressController extends ApiController
     {
 
         return $this->update($id, $request->all());
-
     }
 
     public function view($code)
@@ -97,7 +113,7 @@ class AddressController extends ApiController
             return $this->returnError('Address not found !!!');
         }
 
-        if( Auth::user() ){
+        if (Auth::user()) {
             Auth::user()->recent()->save($data->address);
         }
 
@@ -137,9 +153,5 @@ class AddressController extends ApiController
         }
 
         return false;
-
     }
-
-
-
 }
