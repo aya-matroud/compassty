@@ -83,7 +83,9 @@ Route::middleware('changeLang')->group(function () {
     Route::get('notification/delete/{id}', [NotificationController::class, 'delete']);
     Route::post('notification/edit/{id}', [NotificationController::class, 'edit']);
 
+    Route::post('send-noti', [NotificationController::class, 'sendNotiToUser']);
 
+    Route::post('send-to-all', [NotificationController::class, 'sendNotiToAll']);
 
     //Country
     Route::get('countries', [CountryController::class, 'list']);

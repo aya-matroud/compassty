@@ -23,6 +23,7 @@ return new class extends Migration
             $table->json('description');
             $table->json('short_desc');
             $table->integer('category_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
