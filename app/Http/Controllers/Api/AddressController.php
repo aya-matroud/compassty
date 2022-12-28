@@ -34,7 +34,7 @@ class AddressController extends ApiController
 
         try {
 
-            DB::beginTransaction();
+           // DB::beginTransaction();
             $country_id = $request->country_id;
             $city_id = $request->city_id;
 
@@ -82,15 +82,34 @@ class AddressController extends ApiController
                 $user = Auth::user();
                 $request['user_id'] = $user->id;
 
+                $address = new Address();
+                $address->icon_id = $request->icon_id;
+                $address->name = $request->name;
+                $address->phone_number = $request->phone_number;
+                $address->lat = $request->lat;
+                $address->long = $request->long;
+                $address->region = $request->region;
+                $address->street = $request->street;
+                $address->build_number = $request->build_number;
+                $address->house_number = $request->house_number;
+                $address->floor_number = $request->floor_number;
+                $address->note = $request->note;
+                $address->code_id = $request->code_id;
+                $address->country_id = $request->country_id;
+                $address->city_id = $request->city_id;
+                $address->user_id = $request->user_id;
+                $address->save();
 
-                $address = $this->repositry->save($request->all());
+
+
+                // $address = $this->repositry->save($request->all());
 
                 return $this->returnData('data', new $this->resource($address), __('Get  succesfully'));
             }
-            DB::commit();
+            //DB::commit();
         } catch (Exception $ex) {
             // dd( $ex );
-            Db::rollBack();
+           // Db::rollBack();
 
             return $this->returnError('not created !!');
         }
