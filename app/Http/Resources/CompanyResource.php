@@ -21,6 +21,8 @@ class CompanyResource extends JsonResource
             'logo'=>$this->logo,
             'name'=>$this->name,
             'address'=>$this->address,
+            'lat'=>$this?->lat,
+            'long'=>$this?->long,
             'phone'=>$this->phone,
             'description'=>$this->description,
             'short_desc'=>$this->short_desc,
