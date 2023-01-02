@@ -27,6 +27,7 @@ class CompanyResource extends JsonResource
             'description'=>$this->description,
             'short_desc'=>$this->short_desc,
             'category_id'=>$this?->category->id,
+            'category_name'=>$this?->category->name,
             // 'category'=> new SimpleCategoryResource($this?->category),
             'images'=> ImageResource::collection($this?->images),
         ];
