@@ -58,12 +58,6 @@ class AuthController extends Controller
         ]]);
     }
 
-    //     return response(['status' => true, 'code' => 200, 'msg' => __('Log in success'), 'data' => [
-    //         'token' => $accessToken,
-    //         'user' => UserResource::make(Auth::user())
-    //     ]]);
-
-    // }
 
     public function store(UserRequest $request)
     {
@@ -116,36 +110,69 @@ class AuthController extends Controller
         }
     }
 
-    public function check(Request $request)
+    public function sociallogin(Request $request)
     {
-        // $curl = curl_init();
 
-        // curl_setopt_array($curl, array(
-        //     CURLOPT_URL => "https://api.releans.com/v2/otp/check",
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_ENCODING => "",
-        //     CURLOPT_MAXREDIRS => 10,
-        //     CURLOPT_TIMEOUT => 0,
-        //     CURLOPT_FOLLOWLOCATION => true,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST => "POST",
-        //     CURLOPT_POSTFIELDS => "mobile=" . $request->phone . "&code=" . $request->code,
-        //     CURLOPT_HTTPHEADER => array(
-        //         "Authorization: Bearer 54531079199db631db9651b454a74ee6"
-        //     ),
-        // ));
+        $user = User::where([
+            ['email', $request->email]
+        ])->first();
 
-        // $response = curl_exec($curl);
+        if ($user) {
 
-        // curl_close($curl);
+            $accessToken = $user->createToken('authToken')->accessToken;
 
-        // $d = Json::decode($response);
+            //$user->token = $request->token;
+            $user->save();
+            Auth::login($user);
 
-        // if ($d->status == 200) {
-        //     return $this->returnSuccessMessage('success');
-        // } else {
-        //     return $this->returnError('Sorry! code not correct');
-        // }
+            return response(['status' => true, 'code' => 200, 'msg' => 'success', 'data' => [
+                'token' => $accessToken,
+                'user' => $user
+            ]]);
+        }
+
+
+        $user = User::create([
+            'name' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make('1234'),
+        ]);
+
+
+
+        Auth::login($user);
+
+        $accessToken = $user->createToken('authToken')->accessToken;
+
+        return response(['status' => true, 'code' => 200, 'msg' => 'success', 'data' => [
+            'token' => $accessToken,
+            'user' => UserResource::make(Auth::user()),
+        ]]);
+    }
+
+
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        $old_pw =$request->old_password;
+
+    //   if ($user->password == $old_pw)
+
+        if(Hash::check($old_pw, $user->password)){
+
+
+                $user->update([
+                    'password' => Hash::make($request->new_password),
+                ]);
+
+            return $this->returnSuccessMessage('Password has been changed');
+        }
+
+        return $this->returnError('Password not matched!');
+    }
+    public function sendEmail($email)
+    {
+
     }
 
     public function profile(Request $request)
@@ -155,29 +182,13 @@ class AuthController extends Controller
 
     public function password(Request $request)
     {
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('email', $request->email)->first();
         if ($user) {
 
-            // $curl = curl_init();
+            $otp = $this->sendEmail($request->email);
 
-            // curl_setopt_array($curl, array(
-            //     CURLOPT_URL => "https://api.releans.com/v2/otp/send",
-            //     CURLOPT_RETURNTRANSFER => true,
-            //     CURLOPT_ENCODING => "",
-            //     CURLOPT_MAXREDIRS => 10,
-            //     CURLOPT_TIMEOUT => 0,
-            //     CURLOPT_FOLLOWLOCATION => true,
-            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            //     CURLOPT_CUSTOMREQUEST => "POST",
-            //     CURLOPT_POSTFIELDS => "sender=Bright Life&mobile=" . $request->phone . "&channel=sms",
-            //     CURLOPT_HTTPHEADER => array(
-            //         "Authorization: Bearer 54531079199db631db9651b454a74ee6"
-            //     ),
-            // ));
-
-            // $response = curl_exec($curl);
-
-            // curl_close($curl);
+            $user->email = $otp;
+            $user->save();
 
             return $this->returnSuccessMessage('Code was sent');
         }
@@ -185,9 +196,29 @@ class AuthController extends Controller
         return $this->returnError('Code not sent User not found');
     }
 
+    public function checkOTP($email, $otp)
+    {
+        $user = User::where('email', $email)->first();
+
+        if ((string)$user->otp == (string)$otp) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function check(Request $request)
+    {
+        if ($this->checkOTP($request->email, $request->code)) {
+            return $this->returnSuccessMessage('success');
+        } else {
+            return $this->returnError('Sorry! code not correct');
+        }
+    }
+
     public function changePassword(PasswordChangeRequest $request)
     {
-        $user = User::where('phone', $request->phone)->first();
+        $user = User::where('email', $request->email)->first();
 
         if ($user) {
 
@@ -242,11 +273,5 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
-    {
-        $user = Auth::user()->token();
-        $user->revoke();
 
-        return $this->returnSuccessMessage('Logged out succesfully!');
-    }
 }

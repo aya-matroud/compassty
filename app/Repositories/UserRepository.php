@@ -72,7 +72,7 @@ class UserRepository extends AbstractRepository
         $user->update($data->except([
             'name',
             'email',
-            // 'phone',
+            'phone',
             // 'step',
             // 'active',
             // 'image',

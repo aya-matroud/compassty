@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +28,21 @@ use App\Http\Controllers\Api\CityController;
 */
 
 
+
+Route::post('sociallogin', [AuthController::class, 'sociallogin']);
+
+Route::post('/otp-check', [AuthController::class, 'check']);
+
+Route::post('/password-otp', [AuthController::class, 'password']);
+
+Route::post('change-password', [AuthController::class, 'changePassword']);
+
 //Auth
 Route::middleware(['auth:api', 'changeLang'])->group(function () {
 
     Route::post('/user-update', [AuthController::class, 'updateProfile']);
+
+    Route::post('/update-password', [AuthController::class, 'updatePassword']);
 
     Route::post('address-create', [AddressController::class, 'save']);
 
@@ -172,3 +184,12 @@ Route::post('category-create', [CategoryController::class, 'save']);
 Route::get('category/{id}', [CategoryController::class, 'view']);
 Route::get('category/delete/{id}', [CategoryController::class, 'delete']);
 Route::post('category/edit/{id}', [CategoryController::class, 'edit']);
+
+
+ //pages
+
+ Route::get('pages', [PageController::class, 'list']);
+ Route::post('pages-create', [PageController::class, 'save']);
+ Route::get('page/{id}', [PageController::class, 'view']);
+ Route::get('page/delete/{id}', [PageController::class, 'delete']);
+ Route::post('page/edit/{id}', [PageController::class, 'edit']);
