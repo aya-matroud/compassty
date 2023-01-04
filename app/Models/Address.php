@@ -29,4 +29,8 @@ class Address extends Model
     public function icon(){
         return $this->belongsTo(Icon::class);
     }
+
+    public function images(){
+        return $this->hasMany( Image::class );
+    }
 }

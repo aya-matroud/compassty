@@ -35,6 +35,7 @@ class AddressResource extends JsonResource
             'region'=>$this->region,
             'phone_number'=>$this->phone_number,
             'user'=> new UserResource($this?->user),
+            'images'=>ImageResource::collection( $this->images ),
             // 'code'=> new CodeResource($this?->code),
 
         ];

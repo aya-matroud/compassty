@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Repositories\Repository;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddressRequest;
+use App\Models\Image;
 use Illuminate\Support\Str;
 use Auth;
 use Exception;
@@ -99,6 +100,17 @@ class AddressController extends ApiController
                 $address->city_id = $request->city_id;
                 $address->user_id = $request->user_id;
                 $address->save();
+
+                foreach ($request->images as $image) {
+                    # code...
+
+                    $i = new Image();
+                    $i->image = $image;
+                    $i->address_id = $address->id;
+                    $i->company_id = 0;
+                    $i->save();
+
+                }
 
 
 
